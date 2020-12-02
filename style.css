@@ -1,0 +1,44 @@
+body{
+    background-color: black;
+    color: lightskyblue;
+}
+.cardBox{
+    background-color: grey;
+}
+.cardBox:hover{
+    background-color: lightskyblue;
+    transition: 0.75s;
+    cursor: pointer;
+}
+.chatContainer{
+    background-color: grey;
+    
+}
+.chatBox{
+    height:90%;
+}
+.imgSVG{
+    width: 80%;
+}
+.imgSVGs{
+    
+}
+.cardBox{
+    width: 20%;
+}
+
+.results{
+    height: 200px;
+}
+.progress{
+    float: left;
+    transform: rotate(-90deg);
+    height: 25px;
+    width: 100px;
+  } 
+  .score{
+      transform: rotate(90deg);
+  }
+  .dispNone{
+      display: none;
+  }
