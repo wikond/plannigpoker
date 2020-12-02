@@ -45,10 +45,28 @@ const displayCards = () => {
 
 }
 
+function getInputValue(id) {
+    return document.getElementById(id).value;
+}
 
+function submitForm(e) {
+    e.preventDefault();
+    //Get values from form
+    let roomID = getInputValue('inputRoom');
+    let pinID = getInputValue('inputPIN');
+    let nameID = getInputValue('inputUser');
+    console.log(pinID)
+}
+
+const roomForm = () => {
+    const formEl = document.querySelector('#inputForm');
+    let i = 1;
+    formEl.addEventListener('submit', submitForm)
+}
 
 const main = () => {
     displayCards();
+    roomForm();
 }
 
 document.addEventListener('DOMContentLoaded', main);
