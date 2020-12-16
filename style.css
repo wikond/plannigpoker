@@ -7,6 +7,9 @@ body{
     transition: 0.75s;
     cursor: pointer;
 }
+.selected{
+    background-color: lightskyblue;
+}
 .chatContainer{
     
 }
@@ -15,6 +18,9 @@ body{
 }
 .imgSVG{
     width: 80%;
+}
+.imgSVG3{
+    width: 20px;
 }
 .imgSVGs{
     
