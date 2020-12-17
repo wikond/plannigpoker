@@ -63,9 +63,9 @@ function displayDeck() {
     let cupEl = document.getElementById('115-box');
     let refreshEl = document.getElementById('116-box');
     infEl.classList.replace('display-5', 'display-1');
-    cupEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/cup.svg" alt="">`;
-    qEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/question-circle.svg" alt="">`;
-    refreshEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/arrow-repeat.svg" alt="">`;
+    cupEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
+    qEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt="">`;
+    refreshEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/svg/arrow-repeat.svg" alt="">`;
 }
 
 class Cards {
@@ -165,8 +165,8 @@ function displayResults() {
         }
         if (i < 12) newResSpan.innerText = `${$cardDeck[$myRoom.deck].value[i]}  -  ${valRes}%`;
         if (i == 12) newResSpan.innerHTML = `&#8734`;
-        if (i == 13) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/question-circle.svg" alt="">`;
-        if (i == 14) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/cup.svg" alt="">`;
+        if (i == 13) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt="">`;
+        if (i == 14) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
         //if(i==15)newResSpan.innerText = $cardDeck[$myRoom.deck].value[i];
         resultEl.appendChild(newResDiv);
         newResDiv.classList.add('progress');
@@ -276,11 +276,11 @@ function updateScores(userData) {
     let scoreView = $cardDeck[$myRoom.deck].value[userData[1]];
 
     if (userData[1] - 1 == 11) scoreView = `&#8734`;
-    if (userData[1] - 1 == 12) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/question-circle.svg" alt="">`;
-    if (userData[1] - 1 == 13) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/cup.svg" alt="">`;
+    if (userData[1] - 1 == 12) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt="">`;
+    if (userData[1] - 1 == 13) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
     if (userData[1] - 1 == 15) scoreView = '';
-    if (userData[2] == 0) imgPerson = `<img class="imgSVGs" src="https://online-planning-poker.web.app/person.svg" alt="participant">`;
-    else imgPerson = `<img class="imgSVGs" src="https://online-planning-poker.web.app/file-person.svg" alt="supervisor">`;
+    if (userData[2] == 0) imgPerson = `<img class="imgSVGs" src="https://online-planning-poker.web.app/svg/person.svg" alt="participant">`;
+    else imgPerson = `<img class="imgSVGs" src="https://online-planning-poker.web.app/svg/file-person.svg" alt="supervisor">`;
     let newtrEl = document.createElement("tr");
     newtrEl.innerHTML = `<th scope="row">${scoreView}</th><td>${imgPerson}</td><td>${userData[0]}</td>`;
     scoreEl.appendChild(newtrEl);
