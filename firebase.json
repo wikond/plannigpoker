@@ -14,16 +14,11 @@
   },
   "hosting": {
     "public": "public",
+    "site": "online-planning-poker",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
     ]
   },
   "storage": {
