@@ -20,13 +20,14 @@ firebase.initializeApp(firebaseConfig);
 
 //Global variables 
 //main user data object constructor
-const myRoom = function (roomID, nameID, pinID, scoreID, deckID, statusID) {
+const myRoom = function (roomID, nameID, pinID, scoreID, deckID, statusID, userID) {
     this.room = roomID;
     this.pin = pinID;
     this.name = nameID;
     this.score = scoreID;
     this.deck = deckID;
     this.status = statusID;
+    this.userID = userID
 }
 let $myRoom = new myRoom();
 let $cardList;
@@ -144,7 +145,7 @@ function displayResults() {
     let resultsDispTab = [];
     resultEl.innerHTML = '';
     //console.log($resultsTab);
-    console.log($myRoom);
+    //console.log($myRoom);
     $resultsTab.forEach((el, i) => {
         if (i < 16) totalResults += el;
     })
@@ -179,6 +180,16 @@ function getInputValue(id) {
     return document.getElementById(id).value;
 }
 
+function setUserID() {
+    let userID;
+    let timeSet = new Date();
+
+    userID = timeSet.getTime();
+    userID = userID + Math.floor(Math.random() * 1000000);
+    //console.log(userID);
+    return userID;
+}
+
 function submitForm(e, i) {
     e.preventDefault();
     //Get values from form
@@ -189,22 +200,26 @@ function submitForm(e, i) {
     //if ($myRoom.score = undefined) $myRoom.score = 16;
     if ($myRoom.score >= 0) scoreID = $myRoom.score;
     else $myRoom.score = 16;
-    $myRoom.room = roomID;
-    $myRoom.pin = pinID;
-    $myRoom.name = nameID;
-    $myRoom.status = i;
     //console.log($myRoom, scoreID);
-    if (roomID !== undefined) {
-        saveData(roomID, nameID, pinID, $myRoom.score, $myRoom.deck, i);
-        console.log($myRoom);
+    if ((roomID != '') && (pinID != '') && (nameID != '')) {
+        let userID;
+        $myRoom.room = roomID;
+        $myRoom.pin = pinID;
+        $myRoom.name = nameID;
+        $myRoom.status = i;
+        userID = setUserID();
+        $myRoom.userID = userID;
+        saveData(roomID, nameID, pinID, $myRoom.score, $myRoom.deck, i, userID);
         deckDisplay($myRoom.deck);
         if ($myRoom.status == 1) {
+            updateAllData();
             let selectorEl = [];
             selectorEl = document.querySelectorAll('#deckSel>li>a');
             selectorEl.forEach((el, i) => {
                 el.addEventListener('click', () => {
                     $myRoom.deck = i;
                     updateData();
+                    updateAllData();
                     deckDisplay(i);
                 })
             })
@@ -229,7 +244,7 @@ const roomForm = () => {
 }
 
 //Save to firebase
-function saveData(room, name, pin, score, deck, status) {
+function saveData(room, name, pin, score, deck, status, userID) {
     //refer to specific database
     const roomDB = firebase.database().ref('rooms/' + room + pin + '/' + name);
     roomDB.set({
@@ -238,7 +253,8 @@ function saveData(room, name, pin, score, deck, status) {
         pin: pin,
         score: score,
         deck: deck,
-        status: status
+        status: status,
+        userID: userID
     });
     // var newRoom = roomDB.push();
     // newRoom.set({
@@ -253,7 +269,7 @@ function saveData(room, name, pin, score, deck, status) {
 
 //Update firebase
 function updateData() {
-    console.log($myRoom);
+    //console.log($myRoom);
     const roomDB = firebase.database().ref('rooms/' + $myRoom.room + $myRoom.pin + '/' + $myRoom.name);  //refer to specific database
     roomDB.update({
         //room: room,
@@ -263,6 +279,24 @@ function updateData() {
         score: $myRoom.score
         //status: status
     });
+    readData($myRoom.room, $myRoom.pin);
+}
+
+function updateAllData() {
+    //console.log($myRoom);
+    const roomDB = firebase.database().ref('rooms/' + $myRoom.room + $myRoom.pin);  //refer to specific database
+    roomDB.once("value", function (snapshot) {
+        snapshot.forEach(function (child) {
+            //console.log(child.val().userID);
+            if (child.val().userID != $myRoom.userID) {
+                child.ref.update({
+                    deck: $myRoom.deck,
+                    score: 16,
+                    status: 0
+                })
+            }
+        })
+    })
     readData($myRoom.room, $myRoom.pin);
 }
 
@@ -317,7 +351,7 @@ function readData(roomID, pinID) {
             }
         );
 
-        console.log($myRoom);
+        //console.log($myRoom);
         userData.forEach(e => {
             if ((e[2] == 1 && $myRoom.status == 1) && (e[0] !== $myRoom.name)) {
                 $myRoom.status = 0;
@@ -360,6 +394,7 @@ function selectResult(selectedID) {
     }
     else if ($myRoom.room !== undefined) {
         //selectedEl.classList.remove('selected');
+        if ($myRoom.status == 1) updateAllData();
         readData($myRoom.room, $myRoom.pin);
     }
 }
