@@ -31,6 +31,8 @@ const myRoom = function (roomID, nameID, pinID, scoreID, deckID, statusID, userI
 }
 let $myRoom = new myRoom();
 let $cardList;
+// show hide scores in room window based on status of supervisor from show button
+let $showHide = false;
 let $resultsTab = [];
 $myRoom.deck = 0; //set default deck of Fibonacci to the user
 for (let i = 0; i < 17; i++) $resultsTab.push(0);
@@ -137,7 +139,7 @@ const displayCards = () => {
     $cardDeck[$myRoom.deck].updateCards();
 
 }
-//Display results from all participants in the buttom
+//Display results from all participants in the bottom Result section
 function displayResults() {
     let resultEl = document.querySelector('#results');
     let valRes = 0;
@@ -165,14 +167,22 @@ function displayResults() {
             newResDiv.classList.add('hideshowDiv');
         }
         if (i < 12) newResSpan.innerText = `${$cardDeck[$myRoom.deck].value[i]}  -  ${valRes}%`;
-        if (i == 12) newResSpan.innerHTML = `&#8734`;
-        if (i == 13) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt="">`;
-        if (i == 14) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
+        if (i == 12) newResSpan.innerHTML = `&#8734 -  ${valRes}%`;
+        if (i == 13) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt=""> -  ${valRes}%`;
+        if (i == 14) newResSpan.innerHTML = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/cup.svg" alt=""> -  ${valRes}%`;
         //if(i==15)newResSpan.innerText = $cardDeck[$myRoom.deck].value[i];
         resultEl.appendChild(newResDiv);
         newResDiv.classList.add('progress');
         newResDiv.innerHTML = `<div class="progress-bar" role="progressbar" style="width: ${valRes}%" aria-valuenow="${valRes}" aria-valuemin="0"
         aria-valuemax="100"></div>`;
+        if (valRes > 0 && $showHide) {
+            newResDiv.classList.remove('dispNone');
+            newResSpan.classList.remove('dispNone');
+        }
+        else if (valRes == 0 || !$showHide) {
+            newResDiv.classList.add('dispNone');
+            newResSpan.classList.add('dispNone');
+        }
     }
 }
 
@@ -203,6 +213,7 @@ function submitForm(e, i) {
     //console.log($myRoom, scoreID);
     if ((roomID != '') && (pinID != '') && (nameID != '')) {
         let userID;
+        let elMng = document.getElementById('mngBox');
         $myRoom.room = roomID;
         $myRoom.pin = pinID;
         $myRoom.name = nameID;
@@ -211,7 +222,8 @@ function submitForm(e, i) {
         $myRoom.userID = userID;
         saveData(roomID, nameID, pinID, $myRoom.score, $myRoom.deck, i, userID);
         deckDisplay($myRoom.deck);
-        if ($myRoom.status == 1) {
+        if ($myRoom.status > 0) {
+            elMng.classList.remove('dispNone');
             updateAllData();
             let selectorEl = [];
             selectorEl = document.querySelectorAll('#deckSel>li>a');
@@ -219,12 +231,15 @@ function submitForm(e, i) {
                 el.addEventListener('click', () => {
                     $myRoom.deck = i;
                     updateData();
-                    updateAllData();
+                    // updateAllData();
                     deckDisplay(i);
                 })
             })
         }
-
+        else {
+            elMng.classList.add('dispNone');
+        }
+        setInterval(readData, 30000);
         displayResults();
     }
 }
@@ -264,7 +279,7 @@ function saveData(room, name, pin, score, deck, status, userID) {
     //     score: score,
     //     status: status
     // })
-    readData(room, pin);
+    readData();
 }
 
 //Update firebase
@@ -276,10 +291,10 @@ function updateData() {
         //name: name,
         //pin: pin,
         deck: $myRoom.deck,
-        score: $myRoom.score
-        //status: status
+        score: $myRoom.score,
+        status: $myRoom.status
     });
-    readData($myRoom.room, $myRoom.pin);
+    readData();
 }
 
 function updateAllData() {
@@ -297,7 +312,7 @@ function updateAllData() {
             }
         })
     })
-    readData($myRoom.room, $myRoom.pin);
+    readData();
 }
 
 //update Score Room window with participants
@@ -307,29 +322,36 @@ function updateScores(userData) {
     //console.log(userData)
     //console.log($myRoom)
     //console.log($cardDeck[$myRoom.deck].value);
-    let scoreView = $cardDeck[$myRoom.deck].value[userData[1]];
+    let scoreView;
 
-    if (userData[1] - 1 == 11) scoreView = `&#8734`;
-    if (userData[1] - 1 == 12) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt="">`;
-    if (userData[1] - 1 == 13) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
-    if (userData[1] - 1 == 15) scoreView = '';
+    if ($showHide) {
+        scoreView = $cardDeck[$myRoom.deck].value[userData[1]];
+        if (userData[1] - 1 == 11) scoreView = `&#8734`;
+        if (userData[1] - 1 == 12) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt="">`;
+        if (userData[1] - 1 == 13) scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
+        if (userData[1] - 1 == 15) scoreView = '';
+    }
+    else scoreView = `<img class="imgSVG3" src="https://online-planning-poker.web.app/svg/suit-spade-fill.svg"; alt="bootstrap Icon">`;
+
+    let newtrEl = document.createElement("tr");
     if (userData[2] == 0) imgPerson = `<img class="imgSVGs" src="https://online-planning-poker.web.app/svg/person.svg" alt="participant">`;
     else imgPerson = `<img class="imgSVGs" src="https://online-planning-poker.web.app/svg/file-person.svg" alt="supervisor">`;
-    let newtrEl = document.createElement("tr");
+
     newtrEl.innerHTML = `<th scope="row">${scoreView}</th><td>${imgPerson}</td><td>${userData[0]}</td>`;
     scoreEl.appendChild(newtrEl);
 }
 
 //Read from Firebase
-function readData(roomID, pinID) {
+function readData() {
     let roomNr = document.getElementById('roomNr');
     let statusChange = false;
+    let roomID = $myRoom.room;
+    let pinID = $myRoom.pin;
     let scoreEl = document.getElementById('scores');
     for (let i = 0; i < $resultsTab.length; i++) $resultsTab[i] = 0;
 
     scoreEl.innerHTML = ``;
     roomNr.textContent = roomID;
-    //console.log(roomID, pinID);
 
     //let roomJoin = 
     firebase.database().ref('rooms/' + roomID + pinID).once('value', function (snapshot) {
@@ -342,22 +364,27 @@ function readData(roomID, pinID) {
                 let score = ChildSnapshot.val().score;
                 let deck = ChildSnapshot.val().deck;
                 let status = ChildSnapshot.val().status;
-                userData.push([name, score, status, deck, room]);
-                if (status == 1) {
+                let userID = ChildSnapshot.val().userID;
+                userData.push([name, score, status, deck, room, userID]);
+                if (status > 0) {
                     $myRoom.deck = deck;
                     //console.log(name, score, deck, status);
+                    if (status > 1) $showHide = true;
+                    if (status == 1) $showHide = false;
+                    console.log($showHide)
                 }
                 $resultsTab[score]++;
             }
         );
-
         //console.log($myRoom);
         userData.forEach(e => {
-            if ((e[2] == 1 && $myRoom.status == 1) && (e[0] !== $myRoom.name)) {
+            if ((e[2] > 0 && $myRoom.status > 0) && (e[5] !== $myRoom.userID)) {
                 $myRoom.status = 0;
                 statusChange = true;
             }
         })
+
+
         //console.log($myRoom.room, $myRoom.name, $myRoom.pin, $myRoom.score, $myRoom.deck, $myRoom.status);
         if (statusChange) {
             updateData();
@@ -390,12 +417,12 @@ function selectResult(selectedID) {
         $myRoom.score = Number(selectedID[1] + selectedID[2]) - 1;
         //console.log($myRoom);
         if ($myRoom.room !== undefined && $myRoom.score >= 0) updateData()
-        readData($myRoom.room, $myRoom.pin);
+        readData();
     }
-    else if ($myRoom.room !== undefined) {
+    else if ($myRoom.room !== '') {
         //selectedEl.classList.remove('selected');
-        if ($myRoom.status == 1) updateAllData();
-        readData($myRoom.room, $myRoom.pin);
+        if ($myRoom.status > 0) updateAllData();
+        readData();
     }
 }
 
@@ -409,14 +436,25 @@ const checkCard = (e) => {
     }
 }
 
+function showScores() {
+    console.log('show');
+    $myRoom.status = 2;
+    updateData();
+}
+
 const prepareDOMElements = () => {
     $cardList = document.querySelector('#deckBox');
-    //$cardList = document.querySelectorAll('.cardBox');
 }
 
 const prepareDOMEvents = () => {
-    //console.log($cardList);
+    let clearBtn = document.querySelector('#clearBtn');
+    let showBtn = document.querySelector('#showBtn');
+
     $cardList.addEventListener('click', checkCard);
+    clearBtn.addEventListener('click', updateAllData);
+    showBtn.addEventListener('click', showScores)
+
+
 }
 
 

@@ -35,24 +35,24 @@
                     <div class="row">
 
                         <h4 class="display-5">SELECT ROOM</h4>
-                        <div class="col mt-2">
+                        <div class="col mt-1">
                             <div class="row">
                                 <input type="number" id="inputRoom" name='room' class="form-control w-75"
                                     placeholder="Room">
                             </div>
-                            <div class="row mt-2">
+                            <div class="row mt-1">
                                 <input type="password" id="inputPIN" name='pin' class="form-control w-75"
                                     placeholder="PIN">
                             </div>
                         </div>
-                        <div class="col mt-2">
+                        <div class="col mt-1">
                             <div class="row">
                                 <input type="text" id="inputUser" name='name' class="form-control w-75"
                                     placeholder="Name">
                             </div>
-                            <div class="row mt-2">
-                                <button type="submit" class="btn btn-primary w-25" id="joinBtn">Join</button>
-                                <button type="button" class="btn btn-primary w-50 ml-2"
+                            <div class="row mt-1">
+                                <button type="submit" class="btn btn-primary w-25 pl-2" id="joinBtn">Join</button>
+                                <button type="button" class="btn btn-primary w-50 pl-2 ml-2"
                                     id="createBtn">Supervise</button>
                             </div>
                         </div>
@@ -60,20 +60,24 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="row">
-                <h4 class="display-5"> Select Cards</h4>
+            <div class="row" id="mngBox">
+                <h4 class="display-5"> Manage Room</h4>
                 <div class="d-grid gap-2 d-md-block">
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-expanded="false">
-                            DECK
-                        </button>
-                        <ul class="dropdown-menu" id="deckSel" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" id='deck1' href="#Deck1">Fibonacci</a></li>
-                            <li><a class="dropdown-item" id='deck2' href="#Deck2">Standard</a></li>
-                            <li><a class="dropdown-item" id='deck3' href="#Deck3">Powers</a></li>
-                            <li><a class="dropdown-item" id='deck4' href="#Deck3">T-Shirts</a></li>
-                        </ul>
+                    <div class="row mt-1">
+                        <div class="dropdown">
+                            <button class="btn btn-primary w-25 pl-2 dropdown-toggle" type="button"
+                                id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                                DECK
+                            </button>
+                            <ul class="dropdown-menu" id="deckSel" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" id='deck1' href="#Deck1">Fibonacci</a></li>
+                                <li><a class="dropdown-item" id='deck2' href="#Deck2">Standard</a></li>
+                                <li><a class="dropdown-item" id='deck3' href="#Deck3">Powers</a></li>
+                                <li><a class="dropdown-item" id='deck4' href="#Deck3">T-Shirts</a></li>
+                            </ul>
+                            <button type="submit" class="btn btn-primary w-25 pl-2" id="showBtn">Show</button>
+                            <button type="button" class="btn btn-primary w-25 pl-2 ml-2" id="clearBtn">Clear</button>
+                        </div>
                     </div>
                 </div>
             </div>
