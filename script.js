@@ -67,6 +67,7 @@ function displayDeck() {
     let refreshEl = document.getElementById('116-box');
     infEl.classList.replace('display-5', 'display-1');
     cupEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
+    cupEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/svg/cup.svg" alt="">`;
     qEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/svg/question-circle.svg" alt="">`;
     refreshEl.innerHTML = `<img class="imgSVG" src="https://online-planning-poker.web.app/svg/arrow-repeat.svg" alt="">`;
 }
@@ -371,7 +372,6 @@ function readData() {
                     //console.log(name, score, deck, status);
                     if (status > 1) $showHide = true;
                     if (status == 1) $showHide = false;
-                    console.log($showHide)
                 }
                 $resultsTab[score]++;
             }
@@ -438,7 +438,8 @@ const checkCard = (e) => {
 
 function showScores() {
     console.log('show');
-    $myRoom.status = 2;
+    if ($myRoom.status == 2) $myRoom.status = 1;
+    else $myRoom.status = 2;
     updateData();
 }
 
@@ -453,11 +454,7 @@ const prepareDOMEvents = () => {
     $cardList.addEventListener('click', checkCard);
     clearBtn.addEventListener('click', updateAllData);
     showBtn.addEventListener('click', showScores)
-
-
 }
-
-
 
 const main = () => {
     roomForm();

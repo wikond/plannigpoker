@@ -1,4 +1,9 @@
 body{
+    
+}
+.darkMode{
+    background-color: rgb(49, 43, 43);
+    color: white;
 }
 .cardBox{
 }
@@ -18,6 +23,7 @@ body{
 }
 .imgSVG{
     width: 80%;
+    background-color: white;
 }
 .imgSVG3{
     width: 20px;
